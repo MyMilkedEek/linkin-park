@@ -22,7 +22,7 @@ public class WikipediaRepository {
         this.addPageToRepository(articleName, 0);
     }
 
-    public void addPageToRepository(String articleName, int currentDepth) throws IOException {
+    void addPageToRepository(String articleName, int currentDepth) throws IOException {
         if ( ! this.fileSystem.hasArticleAlreadyBeenParsed(articleName) ) {
             Collection<String> parsedLinks = this.pageParser.parseToLinks(articleName, false);
             this.fileSystem.writeToArticleFile(articleName, parsedLinks);
@@ -33,5 +33,13 @@ public class WikipediaRepository {
                 }
             }
         }
+    }
+
+    public Collection<String> getLinksForArticle(String articleName) throws IOException {
+        if ( !this.fileSystem.hasArticleAlreadyBeenParsed(articleName)) {
+            this.addPageToRepository(articleName, MAX_DEPTH);
+        }
+
+        return this.fileSystem.getArticleLinks(articleName);
     }
 }

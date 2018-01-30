@@ -45,4 +45,8 @@ class FileSystem {
     boolean hasArticleAlreadyBeenParsed(String articleName) {
         return new File(this.rootFolder, articleName).exists();
     }
+
+    Collection<String> getArticleLinks(String articleName) throws IOException {
+        return FileUtils.readLines(new File(this.rootFolder, articleName), "UTF-8");
+    }
 }
