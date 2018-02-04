@@ -49,4 +49,7 @@ public class PageParser {
         return link.trim();
     }
 
+    public Collection<String> parseMetadata(String articleName) {
+        return null;
+    }
 }

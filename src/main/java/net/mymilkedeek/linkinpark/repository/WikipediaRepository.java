@@ -20,6 +20,7 @@ public class WikipediaRepository {
 
     public void addPageToRepository(String articleName) throws IOException {
         this.addPageToRepository(articleName, 0);
+//        this.fileSystem.flush();
     }
 
     void addPageToRepository(String articleName, int currentDepth) throws IOException {
@@ -41,5 +42,13 @@ public class WikipediaRepository {
         }
 
         return this.fileSystem.getArticleLinks(articleName);
+    }
+
+    public void collectMetaDataOnArticle(String articleName) throws IOException {
+        if ( !this.fileSystem.hasArticleAlreadyBeenParsed(articleName)) {
+            this.addPageToRepository(articleName, MAX_DEPTH);
+        }
+
+        this.pageParser.parseMetadata(articleName);
     }
 }

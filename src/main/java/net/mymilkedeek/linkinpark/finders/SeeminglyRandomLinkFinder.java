@@ -3,8 +3,10 @@ package net.mymilkedeek.linkinpark.finders;
 import net.mymilkedeek.linkinpark.ILinkFinder;
 import net.mymilkedeek.linkinpark.repository.WikipediaRepository;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -18,7 +20,7 @@ public class SeeminglyRandomLinkFinder implements ILinkFinder {
         this.repository = repository;
     }
 
-    public String[] findLinks(String start, String goal) {
+    public String[] findLinks(String start, String goal) throws IOException {
         List<String> currentPath = new ArrayList<String>();
         String currentPage = start;
 
@@ -31,7 +33,13 @@ public class SeeminglyRandomLinkFinder implements ILinkFinder {
             if ( links.contains(goal)) {
                 currentPage = goal;
             } else {
-                currentPage = links.iterator().next();
+                Iterator<String> iterator = links.iterator();
+                iterator.next();
+                iterator.next();
+                iterator.next();
+                iterator.next();
+                iterator.next();
+                currentPage = iterator.next();
             }
         }
 
