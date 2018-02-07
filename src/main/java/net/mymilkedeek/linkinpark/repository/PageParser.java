@@ -16,7 +16,7 @@ import java.util.Set;
  */
 public class PageParser {
 
-    private static final int TIMEOUT = 5000;
+    private static final int TIMEOUT = 10000;
 
     public Collection<String> parseToLinks(String wikipediaArticle, boolean mobile) throws IOException {
         String urlPrefix = mobile ? "http://en.m." : "http://en.";
@@ -34,7 +34,8 @@ public class PageParser {
                         href.contains("Template:") || href.contains("Portal:") ||
                         href.contains("Talk:") || href.contains("Help:") ||
                         href.contains("Template_talk:") || href.contains("File:") ||
-                        href.contains("Book:")) {
+                        href.contains("Book:") || href.contains("Wikipedia:") ||
+                        href.contains("Main_Page")) {
                     continue;
                 }
 

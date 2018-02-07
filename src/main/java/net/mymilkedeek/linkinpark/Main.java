@@ -11,6 +11,6 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         WikipediaRepository repository = new WikipediaRepository();
-        repository.addPageToRepository("Belgium");
+        repository.addPageToRepository("OpenPDF");
     }
 }

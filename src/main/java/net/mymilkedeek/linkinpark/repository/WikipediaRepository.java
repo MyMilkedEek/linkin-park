@@ -20,13 +20,13 @@ public class WikipediaRepository {
 
     public void addPageToRepository(String articleName) throws IOException {
         this.addPageToRepository(articleName, 0);
-//        this.fileSystem.flush();
+        this.fileSystem.flush();
     }
 
     void addPageToRepository(String articleName, int currentDepth) throws IOException {
         if ( ! this.fileSystem.hasArticleAlreadyBeenParsed(articleName) ) {
             Collection<String> parsedLinks = this.pageParser.parseToLinks(articleName, false);
-            this.fileSystem.writeToArticleFile(articleName, parsedLinks);
+            this.fileSystem.addArticle(articleName, parsedLinks);
 
             if ( currentDepth <= MAX_DEPTH ) {
                 for (String parsedLink : parsedLinks) {
