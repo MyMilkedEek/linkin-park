@@ -47,7 +47,13 @@ public class PageParser {
     }
 
     private String normalizeLink(String link) {
-        return link.trim();
+        String s = link.trim();
+
+        if ( s.contains("#")) {
+            s = s.substring(0, s.indexOf("#"));
+        }
+
+        return s;
     }
 
     public Collection<String> parseMetadata(String articleName) {

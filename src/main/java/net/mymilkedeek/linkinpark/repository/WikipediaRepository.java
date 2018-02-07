@@ -24,8 +24,11 @@ public class WikipediaRepository {
     }
 
     void addPageToRepository(String articleName, int currentDepth) throws IOException {
+        System.out.println("Getting " + articleName + ".");
         if ( ! this.fileSystem.hasArticleAlreadyBeenParsed(articleName) ) {
+            System.out.println("Cache miss - retrieving article online.");
             Collection<String> parsedLinks = this.pageParser.parseToLinks(articleName, false);
+            System.out.println(parsedLinks.size() + " links found.");
             this.fileSystem.addArticle(articleName, parsedLinks);
 
             if ( currentDepth <= MAX_DEPTH ) {
