@@ -18,24 +18,28 @@ public class WikipediaRepository {
         this.fileSystem = new FileSystem();
     }
 
-    public void addPageToRepository(String articleName) throws IOException {
+    public void addPageToRepository(String articleName) {
         this.addPageToRepository(articleName, 0);
-        this.fileSystem.flush();
     }
 
-    void addPageToRepository(String articleName, int currentDepth) throws IOException {
+    void addPageToRepository(String articleName, int currentDepth) {
         System.out.println("Getting " + articleName + ".");
-        if ( ! this.fileSystem.hasArticleAlreadyBeenParsed(articleName) ) {
-            System.out.println("Cache miss - retrieving article online.");
-            Collection<String> parsedLinks = this.pageParser.parseToLinks(articleName, false);
-            System.out.println(parsedLinks.size() + " links found.");
-            this.fileSystem.addArticle(articleName, parsedLinks);
+        try {
+            if (! this.fileSystem.hasArticleAlreadyBeenParsed(articleName)) {
+                System.out.println("Cache miss - retrieving article online.");
+                Collection<String> parsedLinks = this.pageParser.parseToLinks(articleName, false);
+                System.out.println(parsedLinks.size() + " links found.");
+                this.fileSystem.addArticle(articleName, parsedLinks);
 
-            if ( currentDepth <= MAX_DEPTH ) {
-                for (String parsedLink : parsedLinks) {
-                    this.addPageToRepository(parsedLink, currentDepth + 1);
+                if (currentDepth <= MAX_DEPTH) {
+                    for (String parsedLink : parsedLinks) {
+                        this.addPageToRepository(parsedLink, currentDepth + 1);
+                    }
                 }
             }
+        } catch ( IOException ioe ) {
+            System.out.println("Fetching the page went wrong!");
+            ioe.printStackTrace();
         }
     }
 
@@ -45,6 +49,10 @@ public class WikipediaRepository {
         }
 
         return this.fileSystem.getArticleLinks(articleName);
+    }
+
+    public void persistRepository() throws IOException {
+        this.fileSystem.flush();
     }
 
     public void collectMetaDataOnArticle(String articleName) throws IOException {

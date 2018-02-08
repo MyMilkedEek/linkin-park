@@ -20,5 +20,7 @@ public class Main {
             System.out.println("Which article do you want to parse? ");
             repository.addPageToRepository(scanner.nextLine());
         }
+
+        repository.persistRepository();
     }
 }
