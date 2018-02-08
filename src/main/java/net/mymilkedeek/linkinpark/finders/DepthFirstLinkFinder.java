@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class DepthFirstLinkFinder implements ILinkFinder {
 
-    private static final int maximumPathLength = 10;
+    private static final int maximumPathLength = 6;
     private final WikipediaRepository repository;
 
     public DepthFirstLinkFinder(WikipediaRepository repository) {
@@ -35,31 +35,37 @@ public class DepthFirstLinkFinder implements ILinkFinder {
     }
 
     private List<String> findPath(String start, String goal, List<String> currentPath) throws IOException {
-        if (currentPath.size() == 0 ) {
-            currentPath.add(start);
-        }
-
         if ( !currentPath.contains(start)) {
-            currentPath.add(start);
+            currentPath.add(start); // make sure the start is in the path
+        } else {
+            return currentPath; // avoid dupes in path
         }
 
-        if ( !currentPath.contains(goal)) {
-            if ( currentPath.size() == maximumPathLength ) {
-                currentPath.remove(currentPath.size() - 1);
+        if ( currentPath.contains(goal) ) {
+            return currentPath;
+        }
+
+        if ( currentPath.size() == maximumPathLength ) {
+            currentPath.remove(currentPath.size() - 1);
+            return currentPath;
+        }
+
+        Collection<String> linksOnPage = this.repository.getLinksForArticle(start);
+
+        if ( linksOnPage.contains(goal)) {
+            currentPath.add(goal);
+            return currentPath;
+        }
+
+        for ( String link : linksOnPage ) {
+            findPath(link, goal, currentPath);
+
+            if ( currentPath.contains(goal)) {
                 return currentPath;
             }
-
-            Collection<String> linksOnPage = this.repository.getLinksForArticle(start);
-
-            if (linksOnPage.contains(goal)) {
-                currentPath.add(goal);
-            } else {
-                for (String link : linksOnPage) {
-                    currentPath = findPath(link, goal, currentPath);
-                }
-            }
         }
 
+        currentPath.remove(currentPath.size()-1);
         return currentPath;
     }
 }
