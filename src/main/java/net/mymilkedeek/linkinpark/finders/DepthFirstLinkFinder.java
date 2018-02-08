@@ -4,9 +4,7 @@ import net.mymilkedeek.linkinpark.ILinkFinder;
 import net.mymilkedeek.linkinpark.repository.WikipediaRepository;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author MyMilkedEek <Michael>
@@ -16,11 +14,15 @@ public class DepthFirstLinkFinder implements ILinkFinder {
     private static final int maximumPathLength = 6;
     private final WikipediaRepository repository;
 
+    private Set<String> memory;
+
     public DepthFirstLinkFinder(WikipediaRepository repository) {
         this.repository = repository;
     }
 
     public List<String> findLinks(String start, String goal) throws IOException {
+        this.memory = new HashSet<String>();
+
         long startTime = System.currentTimeMillis();
         List<String> path = findPath(start, goal, new ArrayList<String>());
         long endTime = System.currentTimeMillis();
@@ -35,6 +37,13 @@ public class DepthFirstLinkFinder implements ILinkFinder {
     }
 
     private List<String> findPath(String start, String goal, List<String> currentPath) throws IOException {
+        if ( !this.memory.contains(start)) {
+            this.memory.add(start);
+        } else {
+            return currentPath; // we've already been here before, it's not a road you want to go down again,
+            // TODO: maybe add previous depth here. lower depth gets recalculated.
+        }
+
         if ( !currentPath.contains(start)) {
             currentPath.add(start); // make sure the start is in the path
         } else {
