@@ -20,7 +20,7 @@ public class SeeminglyRandomLinkFinder implements ILinkFinder {
         this.repository = repository;
     }
 
-    public String[] findLinks(String start, String goal) throws IOException {
+    public List<String> findLinks(String start, String goal) throws IOException {
         List<String> currentPath = new ArrayList<String>();
         String currentPage = start;
 
@@ -46,6 +46,6 @@ public class SeeminglyRandomLinkFinder implements ILinkFinder {
         System.out.println("Goal reached!");
         currentPath.add(goal);
 
-        return currentPath.toArray(new String[currentPath.size()]);
+        return currentPath;
     }
 }
