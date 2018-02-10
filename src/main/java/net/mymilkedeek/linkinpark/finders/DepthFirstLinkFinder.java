@@ -15,6 +15,7 @@ public class DepthFirstLinkFinder implements ILinkFinder {
     private final WikipediaRepository repository;
 
     private Set<String> memory;
+    private long sessionEndTime;
 
     public DepthFirstLinkFinder(WikipediaRepository repository) {
         this.repository = repository;
@@ -24,6 +25,7 @@ public class DepthFirstLinkFinder implements ILinkFinder {
         this.memory = new HashSet<String>();
 
         long startTime = System.currentTimeMillis();
+        sessionEndTime = startTime + 120000;
         List<String> path = findPath(start, goal, new ArrayList<String>());
         long endTime = System.currentTimeMillis();
 
@@ -67,7 +69,9 @@ public class DepthFirstLinkFinder implements ILinkFinder {
         }
 
         for ( String link : linksOnPage ) {
-            findPath(link, goal, currentPath);
+            if ( sessionEndTime > System.currentTimeMillis()) {
+                findPath(link, goal, currentPath);
+            }
 
             if ( currentPath.contains(goal)) {
                 return currentPath;

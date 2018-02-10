@@ -32,7 +32,11 @@ public class Main {
 
                 List<String> links = linkFinder.findLinks(start, goal);
 
-                System.out.println("Links found!");
+                if ( links.size() > 0) {
+                    System.out.println("Links found!");
+                } else {
+                    System.out.println("Uhoh");
+                }
 
                 for ( String link : links ) {
                     System.out.println(link);
