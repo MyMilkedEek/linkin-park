@@ -62,6 +62,14 @@ class FileSystem {
         if ( ! this.cache.containsKey(temp)) {
             this.cache.put(temp, links);
             this.toWrite.add(temp);
+
+            if (this.toWrite.size() > 1000 ) {
+                try {
+                    this.flush();
+                } catch (IOException e) {
+                    e.printStackTrace(); // TODO catch exception properly
+                }
+            }
         }
     }
 
@@ -93,7 +101,7 @@ class FileSystem {
             }
         }
 
-        this.toWrite = new ArrayList<String>();
         FileUtils.writeStringToFile(file, stringBuilder.toString(), "UTF-8", true);
+        this.toWrite = new ArrayList<String>();
     }
 }
