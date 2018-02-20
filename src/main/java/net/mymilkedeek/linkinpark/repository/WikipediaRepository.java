@@ -12,10 +12,12 @@ public class WikipediaRepository {
 
     private PageParser pageParser;
     private FileSystem fileSystem;
+    private boolean mobile;
 
-    public WikipediaRepository() {
+    public WikipediaRepository(boolean mobile) {
         this.pageParser = new PageParser();
         this.fileSystem = new FileSystem();
+        this.mobile = mobile;
     }
 
     public void addPageToRepository(String articleName) {
@@ -23,12 +25,9 @@ public class WikipediaRepository {
     }
 
     void addPageToRepository(String articleName, int currentDepth) {
-        System.out.println("Getting " + articleName + ".");
         try {
             if (! this.fileSystem.hasArticleAlreadyBeenParsed(articleName)) {
-                System.out.println("Cache miss - retrieving article online.");
-                Collection<String> parsedLinks = this.pageParser.parseToLinks(articleName, false);
-                System.out.println(parsedLinks.size() + " links found.");
+                Collection<String> parsedLinks = this.pageParser.parseToLinks(articleName, mobile);
                 this.fileSystem.addArticle(articleName, parsedLinks);
 
                 if (currentDepth <= MAX_DEPTH) {
@@ -38,17 +37,25 @@ public class WikipediaRepository {
                 }
             }
         } catch ( IOException ioe ) {
-            System.out.println("Fetching the page went wrong!");
             ioe.printStackTrace();
         }
     }
 
-    public Collection<String> getLinksForArticle(String articleName) throws IOException {
+    public Collection<String> getLinksForArticle(String articleName, boolean fetch) throws IOException {
         if ( !this.fileSystem.hasArticleAlreadyBeenParsed(articleName)) {
-            this.addPageToRepository(articleName, MAX_DEPTH);
+            if ( fetch ) {
+                this.addPageToRepository(articleName, MAX_DEPTH);
+            } else {
+                return null;
+            }
         }
 
         return this.fileSystem.getArticleLinks(articleName);
+
+    }
+
+    public Collection<String> getLinksForArticle(String articleName) throws IOException {
+        return this.getLinksForArticle(articleName, true);
     }
 
     public void persistRepository() throws IOException {
@@ -61,5 +68,13 @@ public class WikipediaRepository {
         }
 
         this.pageParser.parseMetadata(articleName);
+    }
+
+    public boolean contains(String article) {
+        return this.fileSystem.hasArticleAlreadyBeenParsed(article);
+    }
+
+    public Collection<String> getAll() {
+        return fileSystem.getAllArticles();
     }
 }

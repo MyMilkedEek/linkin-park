@@ -104,4 +104,8 @@ class FileSystem {
         FileUtils.writeStringToFile(file, stringBuilder.toString(), "UTF-8", true);
         this.toWrite = new ArrayList<String>();
     }
+
+    public Collection<String> getAllArticles() {
+        return this.cache.keySet();
+    }
 }

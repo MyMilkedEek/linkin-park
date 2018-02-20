@@ -1,6 +1,6 @@
 package net.mymilkedeek.linkinpark;
 
-import net.mymilkedeek.linkinpark.finders.DepthFirstLinkFinder;
+import net.mymilkedeek.linkinpark.finders.NotEnoughTimeLinkFinder;
 import net.mymilkedeek.linkinpark.repository.WikipediaRepository;
 
 import java.io.IOException;
@@ -13,8 +13,8 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        WikipediaRepository repository = new WikipediaRepository();
-        ILinkFinder linkFinder = new DepthFirstLinkFinder(repository);
+        WikipediaRepository repository = new WikipediaRepository(true);
+        ILinkFinder linkFinder = new NotEnoughTimeLinkFinder(repository);
 
         Scanner scanner = new Scanner(System.in);
         String input = "";
@@ -27,6 +27,7 @@ public class Main {
                 repository.addPageToRepository(input.replaceAll("add ", ""));
             } else if ( input.startsWith("find ")) {
                 String goal = input.replace("find ", "");
+                goal = goal.substring(0, 1).toUpperCase() + goal.substring(1);
                 System.out.println("What's the starting location?");
                 String start = scanner.nextLine();
 
