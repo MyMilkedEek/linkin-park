@@ -1,10 +1,14 @@
 package net.mymilkedeek.linkinpark.finders;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import net.mymilkedeek.linkinpark.ILinkFinder;
 import net.mymilkedeek.linkinpark.repository.WikipediaRepository;
-
-import java.io.IOException;
-import java.util.*;
 
 /**
  * @author MyMilkedEek <Michael>
@@ -25,7 +29,7 @@ public class DepthFirstLinkFinder implements ILinkFinder {
         this.memory = new HashSet<String>();
 
         long startTime = System.currentTimeMillis();
-        sessionEndTime = startTime + 120000;
+        sessionEndTime = startTime + 5000;
         List<String> path = findPath(start, goal, new ArrayList<String>());
         long endTime = System.currentTimeMillis();
 

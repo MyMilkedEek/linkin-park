@@ -1,11 +1,12 @@
 package net.mymilkedeek.linkinpark;
 
-import net.mymilkedeek.linkinpark.finders.NotEnoughTimeLinkFinder;
-import net.mymilkedeek.linkinpark.repository.WikipediaRepository;
-
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import net.mymilkedeek.linkinpark.finders.DepthFirstLinkFinder;
+import net.mymilkedeek.linkinpark.repository.WikipediaRepository;
 
 /**
  * @author MyMilkedEek <Michael>
@@ -13,35 +14,32 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) throws IOException {
+
+        List<String[]> tuples = new ArrayList<String[]>();
+        Scanner sc = new Scanner("data.txt");
+        while(sc.hasNextLine())
+        {
+            tuples.add(sc.nextLine().split("\t"));
+        }
+        sc.close();
+
         WikipediaRepository repository = new WikipediaRepository(true);
-        ILinkFinder linkFinder = new NotEnoughTimeLinkFinder(repository);
+        ILinkFinder linkFinder = new DepthFirstLinkFinder(repository);
 
-        Scanner scanner = new Scanner(System.in);
-        String input = "";
+        for ( String[] strings : tuples ) {
+            String start = strings[0];
+            String goal = strings[1];
 
-        while ( !input.equalsIgnoreCase("quit")) {
-            System.out.println("What do you want to do? ");
-            input = scanner.nextLine();
+            List<String> links = linkFinder.findLinks(start, goal);
 
-            if ( input.startsWith("add ")) {
-                repository.addPageToRepository(input.replaceAll("add ", ""));
-            } else if ( input.startsWith("find ")) {
-                String goal = input.replace("find ", "");
-                goal = goal.substring(0, 1).toUpperCase() + goal.substring(1);
-                System.out.println("What's the starting location?");
-                String start = scanner.nextLine();
+            if ( links.size() > 0) {
+                System.out.println("Links found!");
+            } else {
+                System.out.println("Uhoh");
+            }
 
-                List<String> links = linkFinder.findLinks(start, goal);
-
-                if ( links.size() > 0) {
-                    System.out.println("Links found!");
-                } else {
-                    System.out.println("Uhoh");
-                }
-
-                for ( String link : links ) {
-                    System.out.println(link);
-                }
+            for ( String link : links ) {
+                System.out.println(link);
             }
         }
 
